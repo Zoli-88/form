@@ -91,12 +91,12 @@
     <br> 
     <br>
     <nav> 
-      <button onclick="renderPosts()"> 
+      <button type="button" onclick="renderPosts()"> 
         <span> 
           Get all posts
         </span> 
       </button> 
-      <button onclick="renderUsers()"> 
+      <button type="button" onclick="renderUsers()"> 
         <span> 
           Get all users
         </span> 
@@ -111,8 +111,8 @@
         </button>
      </form>
       <form onsubmit="renderUsersByName(event)">
-        <label for="search">Search User</label>
-        <input type="text" name="search">
+        <label for="searchName">Search User</label>
+        <input type="text" name="searchName">
         <button type="submit">
           <span>
             Go
@@ -136,7 +136,6 @@
     // DOM elements
     const $postList = document.querySelector("#posts");
     const $userList = document.querySelector("#users");
-    // const $search = document.querySelector("#search");
     const $message = document.querySelector("#message");
 
     // Functions
@@ -168,7 +167,7 @@
       let endpointUrl = `${BASE_API}/${USERS_API}`;
 
       if (queryTitle) {
-        endpointUrl += `?users=${queryTitle}`;
+        endpointUrl += `?username=${queryTitle}`;
       }
       const response = await fetch(endpointUrl);
       const users = await response.json();
@@ -214,7 +213,6 @@
     }
 
     function renderPostsByTtile(e) {
-      // const queryTitle = search.value;
       e.preventDefault();
       const formData = new FormData(e.target);
       const queryTitle = formData.get("search");
@@ -224,7 +222,7 @@
     function renderUsersByName(e) {
       e.preventDefault();
       const formData = new FormData(e.target);
-      const queryUser = formData.get("search");
+      const queryUser = formData.get("searchName");
      renderUsers(queryUser);
     }
 
