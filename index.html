@@ -1,60 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="scss/main.css">
-  <title>Document</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Hubballi&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet" />
+  <title>JSONPlaceholder</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+      color: #f0f0f0;
+    }
+
+    body {
+      background: #1d1d1d;
+    }
+
+    input {
+      padding: 8px;
+      font-family: inherit;
+      color: #1d1d1d;
+    }
+
+    .container {
+      max-width: 1440px;
+      width: 100%;
+      background: #141414;
+      padding: 24px;
+      border-radius: 10px;
+      margin: 0 auto;
+      margin-top: 44px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    button {
+      padding: 8px;
+      background: #f0f0f0;
+      border: none;
+      border-left: 8px solid #6b62ec;
+      border-radius: 6px;
+      outline: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    button span {
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+      color: #141414;
+    }
+
+    button:hover {
+      border-color: #4a40e0;
+    }
+
+    .list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 64px;
+    }
+
+    article {
+      border-left: 8px solid #6b62ec;
+      padding: 16px;
+    }
+
+    p {
+      line-height: 1.4;
+    }
+  </style>
 </head>
-<header>
 
-</header>
-<main>
-  <section class="section-component container-structure">
-    <div>
-      <h2>Registration Form</h2>
-      <form class="form-component">
-        <label for="full_name">Name</label>
-        <input 
-          type="text" 
-          id="full_name" 
-          name="full_name">
-        <label for="email">Email Address</label>
-          <input 
-          type="email" 
-          id="email" 
-          name="email">
-        <label for="country">Country</label>
-          <input 
-          type="text" 
-          id="country" 
-          name="country">
-        <label for="phone">Phone</label>
-          <input 
-          type="tel" 
-          id="phone" 
-          name="phone">
-        <label for="password">Password</label>
-          <input 
-          type="password" 
-          id="password" 
-          name="password">
-        <label for="terms">
-          <input 
-          type="checkbox"
-          id="terms" 
-          name="terms">
-          I accept terms & conditions</label>
-        <button type="submit">Create Account</button>
-      </form>
-  </div>
-  </section>
-</main>
-<footer>
-
-</footer>
 <body>
-  
+  <div class="container">
+    <h1>JSONPlaceholder API</h1> 
+    <small>Learning how to use an API</small> 
+    <br> 
+    <br>
+    <nav> 
+      <button onclick="renderPosts()"> 
+        <span> 
+          Get all posts
+        </span> 
+      </button> 
+      <button onclick="renderUsers()"> 
+        <span> 
+          Get all users
+        </span> 
+      </button>
+      <form onsubmit="renderPostsByTtile(event)">
+        <label for="search">Search Title</label>
+        <input type="text" name="search">
+        <button type="submit">
+          <span>
+            Go
+          </span>
+        </button>
+     </form>
+      <form onsubmit="renderUsersByName(event)">
+        <label for="search">Search User</label>
+        <input type="text" name="search">
+        <button type="submit">
+          <span>
+            Go
+          </span>
+        </button>
+     </form>
+    </nav>
+  </div>
+  <div class="container">
+    <p id="message">Please select a topic</p>
+    <div id="posts" class="list"></div>
+    <div id="users" class="list"></div>
+  </div>
+
+  <script>
+    // Constants
+    const BASE_API = "https://jsonplaceholder.typicode.com";
+    const POSTS_API = "posts";
+    const USERS_API = "users";
+
+    // DOM elements
+    const $postList = document.querySelector("#posts");
+    const $userList = document.querySelector("#users");
+    // const $search = document.querySelector("#search");
+    const $message = document.querySelector("#message");
+
+    // Functions
+    async function listPosts(queryTitle) {
+      let endpointUrl = `${BASE_API}/${POSTS_API}`;
+
+      if (queryTitle) {
+        endpointUrl += `?title=${queryTitle}`
+      }
+
+      const response = await fetch(endpointUrl);
+      const posts = await response.json();
+      return posts
+    }
+
+    async function renderPosts(queryTitle) {
+      try {
+        const posts = await listPosts(queryTitle);
+        clearList();
+        posts.forEach((post) => {
+          $postList.innerHTML += postCardComponent(post)
+        })
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    async function listUsers(queryTitle) {
+      let endpointUrl = `${BASE_API}/${USERS_API}`;
+
+      if (queryTitle) {
+        endpointUrl += `?users=${queryTitle}`;
+      }
+      const response = await fetch(endpointUrl);
+      const users = await response.json();
+      return users
+    }
+
+    async function renderUsers(queryUser) {
+      try {
+        const users = await listUsers(queryUser);
+        clearList();
+        users.forEach((user) => {
+          $userList.innerHTML += userCardComponent(user)
+        })
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    function postCardComponent(post) {
+      return `
+        <article>
+          <h2>${post.title}</h2>
+          <br>
+          <p>${post.body}</p>
+        </article>
+      `
+    }
+
+    function userCardComponent(user) {
+      return `
+      <article>
+        <h2>${user.username}</h2>
+        <br>
+        <p>${user.name}</p>
+        <p>${user.email}</p>
+        <p>${user.phone}</p>`
+    }
+
+    function clearList() {
+      $postList.innerHTML = '';
+      $userList.innerHTML = '';
+      $message.innerHTML = '';
+    }
+
+    function renderPostsByTtile(e) {
+      // const queryTitle = search.value;
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const queryTitle = formData.get("search");
+      renderPosts(queryTitle);
+    }
+
+    function renderUsersByName(e) {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const queryUser = formData.get("search");
+     renderUsers(queryUser);
+    }
+
+  </script>
 </body>
+
 </html>
