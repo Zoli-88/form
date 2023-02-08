@@ -11,77 +11,119 @@
     href="https://fonts.googleapis.com/css2?family=Hubballi&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
     rel="stylesheet" />
   <title>JSONPlaceholder</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      font-family: 'Montserrat', sans-serif;
-      color: #f0f0f0;
+  <style>    * {
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    color: #f0f0f0;
+  }
+  body {
+    background: #1d1d1d;
+  }
+  .container {
+    max-width: 1440px;
+    width: 100%;
+    background: #141414;
+    padding: 24px;
+    border-radius: 10px;
+    margin: 0 auto;
+    margin-top: 44px;
+  }
+  nav {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  button,
+  input {
+    padding: 8px;
+    background: #f0f0f0;
+    border: none;
+    border-left: 8px solid #6b62ec;
+    border-radius: 6px;
+    outline: none;
+    font-weight: 600;
+    transition: .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  button {
+    cursor: pointer;
+  }
+  input {
+    color: #141414;
+    margin: 8px 0;
+  }
+  button span {
+    text-transform: uppercase;
+    letter-spacing: -0.5px;
+    color: #141414;
+  }
+  button:hover {
+    border-color: #4a40e0;
+  }
+  .article-link {
+    text-decoration: none;
+    display: flex;
+  }
+  .article-link:hover article {
+    background: #0f0f0f;
+    border-color: #4a40e0;
+  }
+  .article-link:focus-within .content {
+    /* display: none; */
+  }
+  .article-link:focus-within form {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+  }
+  form {
+    background: #141414;
+  }
+  form,
+  label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+  .list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+    gap: 64px;
+  }
+  article {
+    border-left: 8px solid #6b62ec;
+    padding: 16px;
+    transition: .2s;
+    width: 100%;
+    position: relative;
+    animation: .1s fade-in forwards;
+  }
+  article form {
+    display: none;
+    padding: 16px;
+    opacity: 0;
+    animation: .1s fade-in forwards;
+  }
+  p {
+    line-height: 1.4;
+  }
+  small {
+    color: #dfdfdf;
+  }
+  ::placeholder {
+    color: #141414;
+  }
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
     }
-
-    body {
-      background: #1d1d1d;
+    100% {
+      opacity: 1;
     }
-
-    input {
-      padding: 8px;
-      font-family: inherit;
-      color: #1d1d1d;
-    }
-
-    .container {
-      max-width: 1440px;
-      width: 100%;
-      background: #141414;
-      padding: 24px;
-      border-radius: 10px;
-      margin: 0 auto;
-      margin-top: 44px;
-    }
-
-    nav {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-    }
-
-    button {
-      padding: 8px;
-      background: #f0f0f0;
-      border: none;
-      border-left: 8px solid #6b62ec;
-      border-radius: 6px;
-      outline: none;
-      font-weight: 600;
-      cursor: pointer;
-      transition: .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    button span {
-      text-transform: uppercase;
-      letter-spacing: -0.5px;
-      color: #141414;
-    }
-
-    button:hover {
-      border-color: #4a40e0;
-    }
-
-    .list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 64px;
-    }
-
-    article {
-      border-left: 8px solid #6b62ec;
-      padding: 16px;
-    }
-
-    p {
-      line-height: 1.4;
-    }
-  </style>
+  }
+</style>
 </head>
 
 <body>
@@ -112,7 +154,7 @@
      </form>
       <form onsubmit="renderUsersByName(event)">
         <label for="search">Search User</label>
-        <input type="text" name="search">
+        <input type="text" name="searchUser">
         <button type="submit">
           <span>
             Go
@@ -164,11 +206,11 @@
       }
     }
 
-    async function listUsers(queryTitle) {
+    async function listUsers(queryUser) {
       let endpointUrl = `${BASE_API}/${USERS_API}`;
 
-      if (queryTitle) {
-        endpointUrl += `?users=${queryTitle}`;
+      if (queryUser) {
+        endpointUrl += `?user=${queryUser}`;
       }
       const response = await fetch(endpointUrl);
       const users = await response.json();
@@ -189,11 +231,43 @@
 
     function postCardComponent(post) {
       return `
-        <article>
-          <h2>${post.title}</h2>
-          <br>
-          <p>${post.body}</p>
-        </article>
+        <a 
+          class="article-link" 
+          href="#!"
+        >
+          <article>
+            <div class="content">
+              <h2>${post.title}</h2>
+              </br>
+              <p>${post.body}</p>
+              </br>
+              <small>Click to edit</small>
+            </div>            
+            <form onsubmit="renderNewPosts(event)">              
+              <label>                
+                <span>
+                  Edit Post
+                </span>
+                <input 
+                  type="text" 
+                  name="postTitle" 
+                  id="postTitle"
+                  placeholder="Edit post title"
+                >              
+              </label>              
+                <input 
+                  type="hidden" 
+                  name="postId" 
+                  value=${post.id}
+                >
+                <button type="submit">              
+                <span>
+                  Edit
+                </span>
+                </button>
+            </form>
+          </article>
+        </a>      
       `
     }
 
@@ -224,7 +298,7 @@
     function renderUsersByName(e) {
       e.preventDefault();
       const formData = new FormData(e.target);
-      const queryUser = formData.get("search");
+      const queryUser = formData.get("searchUser");
      renderUsers(queryUser);
     }
 
