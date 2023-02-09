@@ -1,0 +1,142 @@
+:root {
+  --primaryText: #f0f0f0;
+  --faintText: #dfdfdf;
+
+  --primaryBg: #1d1d1d;
+  --secondaryBg: #141414;
+  --secondaryBgHover: #0f0f0f;
+
+  --accent: #6b62ec;
+  --accentHover: #4a40e0;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Montserrat', sans-serif;
+  color: var(--primaryText);
+}
+
+body {
+  background: var(--primaryBg);
+}
+
+.container {
+  max-width: 1440px;
+  width: 100%;
+  background: var(--secondaryBg);
+  padding: 24px;
+  border-radius: 10px;
+  margin: 0 auto;
+  margin-top: 44px;
+}
+
+nav {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+button,
+input {
+  padding: 8px;
+  background: var(--primaryText);
+  border: none;
+  border-left: 8px solid var(--accent);
+  border-radius: 6px;
+  outline: none;
+  font-weight: 600;
+  transition: .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+button {
+  cursor: pointer;
+}
+
+input {
+  color: var(--secondaryBg);
+  margin: 8px 0;
+}
+
+button span {
+  text-transform: uppercase;
+  letter-spacing: -0.5px;
+  color: var(--secondaryBg);
+}
+
+button:hover {
+  border-color: var(--accentHover);
+}
+
+.article-link {
+  text-decoration: none;
+  display: flex;
+}
+
+.article-link:hover article {
+  background: var(--secondaryBgHover);
+  border-color: var(--accentHover);
+}
+
+.article-link:focus-within form {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+form {
+  background: var(--secondaryBg);
+}
+
+form,
+label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 64px;
+}
+
+article {
+  border-left: 8px solid var(--accent);
+  padding: 16px;
+  transition: .2s;
+  width: 100%;
+  position: relative;
+  animation: .1s fade-in forwards;
+}
+
+article form {
+  display: none;
+  padding: 16px;
+  opacity: 0;
+  animation: .1s fade-in forwards;
+}
+
+p {
+  line-height: 1.4;
+}
+
+small {
+  color: var(--faintText);
+}
+
+::placeholder {
+  color: var(--secondaryBg);
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}

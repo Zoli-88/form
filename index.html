@@ -10,155 +10,11 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Hubballi&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
     rel="stylesheet" />
+    <link rel="stylesheet" href="css/main.css">
   <title>JSONPlaceholder</title>
-  <style>
-    :root {
-      --primaryText: #f0f0f0;
-      --faintText: #dfdfdf;
-
-      --primaryBg: #1d1d1d;
-      --secondaryBg: #141414;
-      --secondaryBgHover: #0f0f0f;
-
-      --accent: #6b62ec;
-      --accentHover: #4a40e0;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      font-family: 'Montserrat', sans-serif;
-      color: var(--primaryText);
-    }
-
-    body {
-      background: var(--primaryBg);
-    }
-
-    .container {
-      max-width: 1440px;
-      width: 100%;
-      background: var(--secondaryBg);
-      padding: 24px;
-      border-radius: 10px;
-      margin: 0 auto;
-      margin-top: 44px;
-    }
-
-    nav {
-      display: flex;
-      gap: 24px;
-      margin-bottom: 24px;
-    }
-
-    button,
-    input {
-      padding: 8px;
-      background: var(--primaryText);
-      border: none;
-      border-left: 8px solid var(--accent);
-      border-radius: 6px;
-      outline: none;
-      font-weight: 600;
-      transition: .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    input {
-      color: var(--secondaryBg);
-      margin: 8px 0;
-    }
-
-    button span {
-      text-transform: uppercase;
-      letter-spacing: -0.5px;
-      color: var(--secondaryBg);
-    }
-
-    button:hover {
-      border-color: var(--accentHover);
-    }
-
-    .article-link {
-      text-decoration: none;
-      display: flex;
-    }
-
-    .article-link:hover article {
-      background: var(--secondaryBgHover);
-      border-color: var(--accentHover);
-    }
-
-    .article-link:focus-within form {
-      display: block;
-      position: absolute;
-      inset: 0;
-      z-index: 2;
-    }
-
-    form {
-      background: var(--secondaryBg);
-    }
-
-    form,
-    label {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      text-align: left;
-    }
-
-    .list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 64px;
-    }
-
-    article {
-      border-left: 8px solid var(--accent);
-      padding: 16px;
-      transition: .2s;
-      width: 100%;
-      position: relative;
-      animation: .1s fade-in forwards;
-    }
-
-    article form {
-      display: none;
-      padding: 16px;
-      opacity: 0;
-      animation: .1s fade-in forwards;
-    }
-
-    p {
-      line-height: 1.4;
-    }
-
-    small {
-      color: var(--faintText);
-    }
-
-    ::placeholder {
-      color: var(--secondaryBg);
-    }
-
-    @keyframes fade-in {
-      0% {
-        opacity: 0;
-      }
-
-      100% {
-        opacity: 1;
-      }
-    }
-  </style>
 </head>
 
 <body>
-
   <div class="container">
     <h1>JSONPlaceholder API</h1>
     <small>Learning how to use an API</small> <br> <br>
@@ -176,7 +32,7 @@
           <span>Search Post</span> 
           <input 
             type="search" 
-            name="post" 
+            name="searchTitle" 
             id="post"
             placeholder="Find post by title"
           > 
@@ -190,7 +46,7 @@
           <span>Search User</span> 
           <input 
             type="search" 
-            name="user" 
+            name="searchUser" 
             id="user"
             placeholder="Find user by username"
           > 
@@ -207,139 +63,9 @@
     <div id="users" class="list"></div>
   </div>
 
-  <script>
-    // Constants
-    const BASE_API = "https://jsonplaceholder.typicode.com";
-    const POSTS_API = "posts";
-    const USERS_API = "users";
-
-    // DOM elements
-    const $postList = document.querySelector("#posts");
-    const $userList = document.querySelector("#users");
-    const $message = document.querySelector("#message");
-
-    // Functions
-    async function listPosts(queryTitle) {
-      let endpointUrl = `${BASE_API}/${POSTS_API}`;
-
-      if (queryTitle) {
-        endpointUrl += `?title=${queryTitle}`
-      }
-
-      const response = await fetch(endpointUrl);
-      const posts = await response.json();
-      return posts
-    }
-
-    async function renderPosts(queryTitle) {
-      try {
-        const posts = await listPosts(queryTitle);
-        clearList();
-        posts.forEach((post) => {
-          $postList.innerHTML += postCardComponent(post)
-        })
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    async function listUsers(queryUser) {
-      let endpointUrl = `${BASE_API}/${USERS_API}`;
-
-      if (queryUser) {
-        endpointUrl += `?username=${queryUser}`;
-      }
-
-      const response = await fetch(endpointUrl);
-      const users = await response.json();
-      return users
-    }
-
-    async function renderUsers(queryUser) {
-      try {
-        const users = await listUsers(queryUser);
-        clearList();
-        users.forEach((user) => {
-          $userList.innerHTML += userCardComponent(user)
-        })
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    function postCardComponent(post) {
-      return `
-        <a 
-          class="article-link" 
-          href="#!"
-        >
-          <article>
-            <div class="content">
-              <h2>${post.title}</h2>
-              </br>
-              <p>${post.body}</p>
-              </br>
-              <small>Click to edit</small>
-            </div>            
-            <form onsubmit="renderNewPosts(event)">              
-              <label>                
-                <span>
-                  Edit Post
-                </span>
-                <input 
-                  type="text" 
-                  name="postTitle" 
-                  id="postTitle"
-                  placeholder="Edit post title"
-                >              
-              </label>              
-                <input 
-                  type="hidden" 
-                  name="postId" 
-                  value=${post.id}
-                >
-                <button type="submit">              
-                <span>
-                  Edit
-                </span>
-                </button>
-            </form>
-          </article>
-        </a>      
-      `
-    }
-
-    function userCardComponent(user) {
-      return `
-      <article>
-        <h2>${user.username}</h2>
-        <br>
-        <p>${user.name}</p>
-        <p>${user.email}</p>
-        <p>${user.phone}</p>`
-    }
-
-    function clearList() {
-      $postList.innerHTML = '';
-      $userList.innerHTML = '';
-      $message.innerHTML = '';
-    }
-
-    function renderPostsByTtile(e) {
-      e.preventDefault();
-      const formData = new FormData(e.target);
-      const queryTitle = formData.get("searchTitle");
-      renderPosts(queryTitle);
-    }
-
-    function renderUsersByName(e) {
-      e.preventDefault();
-      const formData = new FormData(e.target);
-      const queryUser = formData.get("searchUser");
-      renderUsers(queryUser);
-    }
-
-  </script>
+  <script src="js/api.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/components.js"></script>
 </body>
 
 </html>
