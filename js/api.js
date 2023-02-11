@@ -49,4 +49,6 @@ async function listUsers(queryUser) {
       "Content-type": "application/json; charset=UTF-8"
     }
   })
+  const post = response.json();
+  return post
 }
