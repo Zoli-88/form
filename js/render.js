@@ -11,10 +11,11 @@ _posts = JSON.parse(localStorage.getItem("posts")) || [];
 async function renderPosts(queryTitle) {
   try {
     const posts = await listPosts(queryTitle);
-
-    if (_posts.length === 0) {
+    
+    if (_posts.length === 0 || queryTitle) {
       _posts = posts
     }
+
     renderEmptyContent();
     _posts.forEach((post) => {
       $postList.innerHTML += postCardComponent(post)
